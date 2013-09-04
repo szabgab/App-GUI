@@ -9,11 +9,13 @@ WriteMakefile(
     VERSION_FROM        => 'lib/App/Power/Perl.pm',
     LICENSE => 'perl',
     PREREQ_PM => {
-		'Path::Tiny'   => 0.030;
-        'Prima'        => 1.37,
+		'JSON::Tiny'   => 0.32,
         'Moo'          => 1.003,
         'MooX'         => 0.101,
         'MooX::late'   => 0.014,
+
+		'Path::Tiny'   => 0.030;
+        'Prima'        => 1.37,
     },
     dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean => { FILES    => 'App-Power-Perl-*' },

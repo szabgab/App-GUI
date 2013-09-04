@@ -1,14 +1,28 @@
 package App::Power::Perl;
 use 5.010;
+
 use Moo;
 use MooX::late;
+use JSON::Tiny;
+use Path::Tiny qw(path);
 
-use Prima qw(Application Buttons InputLine Label MsgBox FileDialog Edit);
+use Prima qw(
+	Application
+	Buttons
+	Edit
+	FileDialog
+	InputLine
+	Label
+	MsgBox
+);
 
 our $VERSION = 0.01;
 
-has output => (isa => 'Prima::Edit', is => 'rw');
-has code   => (isa => 'HashRef', is => 'rw', default => sub { {} } );
+my $FORMAT = 1;
+
+has file   => (is => 'rw', isa => 'Str');
+has output => (is => 'rw', isa => 'Prima::Edit');
+has code   => (is => 'rw', isa => 'HashRef', default => sub { { format => $FORMAT } } );
 
 my $welcome = <<"END_WELCOME";
 Welcome to the Power Perl v$VERSION
@@ -23,6 +37,10 @@ sub run {
 	my $w = Prima::MainWindow->new(
 		menuItems => [
 			[ '~File' => [
+					[ '~Open', 'Ctrl-O', sub { $self->open_file(@_) } ],
+					[ '~Save', 'Ctrl-S', sub { $self->save_file(@_) } ],
+					[ 'Save As',         sub { $self->save_file_as(@_) } ],
+					[],
 					[ '~Exit', 'Alt-X', '@X', sub { exit } ],
 				],
 			],
@@ -165,6 +183,79 @@ sub _error {
 	my $msg = sprintf($format, @args);
 	#say $msg;
 	Prima::MsgBox::message_box( 'Error', $msg, mb::Ok);
+}
+
+sub open_file {
+	my ($self) = @_;
+
+	my $open = Prima::OpenDialog-> new(
+		filter => [
+			['PP JSON' => '*.json'],
+			['All' => '*'],
+		],
+	);
+
+	if ($open->execute) {
+		$self->_load_file($open->fileName);
+		$self->file($open->fileName);
+	}
+}
+
+sub _load_file {
+	my ($self, $file) = @_;
+
+	my $json  = JSON::Tiny->new;
+
+	my $code = $json->decode(path($file)->slurp);
+	# TODO we should probably check if all the parts of the
+	# format are correct (e.g. the regext is eval-able etc.)
+	# We might also want to make some security checks here!
+	if ($code->{format} eq $FORMAT) {
+		$self->code($code);
+	}
+}
+
+sub _get_file {
+	my ($self) = @_;
+
+	my $save = Prima::SaveDialog-> new(
+		filter => [
+			['PP JSON' => '*.json'],
+			['All' => '*'],
+		],
+	);
+
+	if ($save->execute) {
+		$self->file($save->fileName);
+	}
+}
+
+sub save_file_as {
+	my ($self) = @_;
+
+	$self->_get_file;
+
+	$self->save_file;
+}
+
+sub save_file {
+	my ($self) = @_;
+
+	my $file = $self->file;
+
+	if (not $file) {
+		$self->_get_file;
+		$file = $self->file;
+	}
+
+	if ($file) {
+		my $json  = JSON::Tiny->new;
+		my $bytes = $json->encode( $self->code );
+		if (open my $fh, '>:encoding(UTF-8)', $file) {
+			print $fh $bytes;
+			close $fh;
+		}
+	}
 }
 
 1;

@@ -1,10 +1,17 @@
 
-- Show simple GUI
-- Select files
-  - Select specific file
-  - Select directory
-    
-- Process any text file with regular expressions (filtering, replacing?)
+- Automatically load the latest.
+- Show recent files.
+
+- Run "JSON" on the command line.
+- Generate stand-alone Perl script.
+
+- Select directory
+     limit search depth CHECKBOX + NUMBER
+     filter files based on extension (case sensitivity?)
+     filter based on generic wilde-card
+     filter based on date, size
+ 
+- Process any text file with regular expressions (replacing?)
 - Support well known text formats (e.g. JSON/YAML/INI/Apache log/XML/HTML)
 - Support well known binary formats (e.g. Spreadsheets)
 - Select URL
