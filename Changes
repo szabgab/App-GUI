@@ -1,3 +1,9 @@
 
 v0.01
-    Initial version
+    Initial version:
+    - Show simple GUI
+    - Select files
+    - Select specific file
+    - Process any text file with regular expressions (filtering)
+
+
