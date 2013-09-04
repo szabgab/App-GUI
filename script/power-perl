@@ -1,0 +1,6 @@
+use strict;
+use warnings;
+
+use App::Power::Perl;
+App::Power::Perl->new->run;
+

@@ -1,0 +1,15 @@
+
+- Show simple GUI
+- Select files
+  - Select specific file
+  - Select directory
+    
+- Process any text file with regular expressions (filtering, replacing?)
+- Support well known text formats (e.g. JSON/YAML/INI/Apache log/XML/HTML)
+- Support well known binary formats (e.g. Spreadsheets)
+- Select URL
+
+- Save processes as json files.
+- Allow the execution of the json files on the command line.
+- Convert json files to real perl script.
+
