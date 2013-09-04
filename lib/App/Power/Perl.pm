@@ -27,7 +27,8 @@ sub run {
 				],
 			],
 			[ '~Editor' => [
-					[ 'Select File', sub { $self->select_file(@_) } ],
+					[ 'Select File',  sub { $self->select_file(@_) } ],
+					[ 'Filter lines', sub { $self->enter_filter(@_) } ],
 				],
 			],
 			[],
@@ -118,11 +119,14 @@ sub run_pressed {
 	my $code = $self->code;
 	if ($code->{file}) {
 		if (open my $fh, '<', $code->{file}) {
+			my $regex = $code->{regex} // '';
 			my $output = $self->output;
 			$output->text('');
 			# TODO: Async read?
 			while (my $line = <$fh>) {
-				$output->insert_text($line . "\n"); # TODO why do we have to add extra newlines?
+				if ($line =~ /$regex/) {
+					$output->insert_text($line . "\n"); # TODO why do we have to add extra newlines?
+				}
 			}
 			close $fh;
 		} else {
@@ -133,10 +137,34 @@ sub run_pressed {
 	}
 }
 
+sub enter_filter {
+	my ($self, $main, $c) = @_;
+
+	my $regex = $self->code->{regex} // '';
+	while (1) {
+		$regex = Prima::MsgBox::input_box( 'Enter Perl regex', 'Filter:', $regex);
+		if (defined $regex) {
+			eval "qr/$regex/";
+			if ($@) {
+				$self->_error("Invalid regex $@");
+			} else {
+				last;
+			}
+		} else {
+			last;
+		}
+	}
+	if (defined $regex) {
+		$self->code->{regex} = $regex;
+	}
+}
+
 sub _error {
 	my ($self, $format, @args) = @_;
+
 	my $msg = sprintf($format, @args);
-	say $msg;
+	#say $msg;
+	Prima::MsgBox::message_box( 'Error', $msg, mb::Ok);
 }
 
 1;
