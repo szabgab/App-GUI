@@ -1,7 +1,10 @@
 package App::Power::Perl;
+use 5.010;
 use Moo;
 
-use Prima qw(Application Buttons InputLine Label);
+use Prima qw(Application Buttons InputLine Label MsgBox);
+
+our $VERSION = 0.01;
 
 
 sub run {
@@ -11,7 +14,12 @@ sub run {
 		menuItems => [
 			[ '~File' => [
 					[ '~Exit', 'Alt-X', '@X', sub { exit } ],
-				]
+				],
+			],
+			[],
+			[ '~Help' => [
+					[ '~About', \&about ],
+				],	
 			],
 		],
 		text   => 'Power Perl',
@@ -52,6 +60,9 @@ sub run {
 	Prima->run;
 }
 
+sub about {
+	Prima::MsgBox::message_box( 'About Power Perl', "Power Perl v$VERSION\nHacked together by Gabor Szabo", mb::Ok);
+}
 
 1;
 
