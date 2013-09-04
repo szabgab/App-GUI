@@ -1,6 +1,9 @@
 use strict;
 use warnings;
 
+use Path::Tiny qw(path);
+use lib path($0)->absolute->parent(2)->child('lib')->stringify;
+
 use App::Power::Perl;
 App::Power::Perl->new->run;
 

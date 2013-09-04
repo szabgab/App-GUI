@@ -1,13 +1,14 @@
 package App::Power::Perl;
 use 5.010;
 use Moo;
+use MooX::late;
 
 use Prima qw(Application Buttons InputLine Label MsgBox FileDialog Edit);
 
 our $VERSION = 0.01;
 
-has output => (is => 'rw');
-has code   => (is => 'rw', default => sub { {} } );
+has output => (isa => 'Prima::Edit', is => 'rw');
+has code   => (isa => 'HashRef', is => 'rw', default => sub { {} } );
 
 my $welcome = <<"END_WELCOME";
 Welcome to the Power Perl v$VERSION
@@ -36,7 +37,7 @@ sub run {
 			],
 		],
 		text   => 'Power Perl',
-		size   => [400, 400],
+		size   => [1000, 800], # width, height
 		#origin => [0, 100],  # left, bottom, at least on OSX it defaults to the left top corner
 	);
 
