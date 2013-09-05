@@ -3,9 +3,12 @@ use 5.010;
 
 use Moo;
 use MooX::late;
+use MooX::Options;
+
 use JSON::Tiny;
 use Path::Tiny qw(path);
 
+use Prima::noARGV;
 use Prima qw(
 	Application
 	Buttons
@@ -20,7 +23,7 @@ our $VERSION = 0.01;
 
 my $FORMAT = 1;
 
-has file   => (is => 'rw', isa => 'Str');
+option file   => (is => 'rw', isa => 'Str', format => 's');
 
 has output => (is => 'rw', isa => 'Prima::Edit');
 has root   => (is => 'rw', isa => 'Prima::InputLine');
@@ -128,6 +131,9 @@ sub run {
 		text => $welcome,
 	));
 	
+	if ($self->file) {
+		$self->_load_file($self->file);
+	}
 
 	Prima->run;
 }
