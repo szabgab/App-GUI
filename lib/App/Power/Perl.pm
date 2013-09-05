@@ -60,38 +60,53 @@ sub run {
 		#origin => [0, 100],  # left, bottom, at least on OSX it defaults to the left top corner
 	);
 
-	$self->output( $main->insert( Edit =>
-		pack => { fill => 'both', expand => 1, },
-		readOnly => 1,
-		text => $welcome,
-	));
-	
-#	$main->insert( Label =>
-#		text   => 'URL',
-#		origin => [0, 300],
-#	);
-#	
-#	my $input = $main->insert( InputLine =>
-#		text        => '',
-#		origin      => [50, 300],
-#		#centered    => 1,
-#		width       => 300,
-#	#	firstChar   => 10,
-#		#alignment   => ta::Center,
-#		#font        => { size => 18, },
-#		#growMode    => gm::GrowHiX,
-#		#buffered    => 1,
-#		borderWidth => 3,
-#		#autoSelect  => 0,
-#	);
-	
-	my $btn = $main->insert( Button =>
-		origin   => [0, 0],
+	my $top = $main->insert( Widget =>
+		pack => { side => 'top', fill => 'x', padx => 0, pady => 0},
+		backColor => cl::White,
+		height => 45,
+
+	);
+
+	$top->insert( Label =>
+		text   => 'File:',
+		pack => { side => 'left', padx => 0, pady => 0},
+		#origin => [0, 0],
+	);
+
+	my $input = $top->insert( InputLine =>
+		text        => '',
+		pack => { side => 'left',  padx => 0, pady => 0},
+		#origin      => [0, 0],
+		#centered    => 1,
+		width       => 300,
+	#	firstChar   => 10,
+		#alignment   => ta::Center,
+		#font        => { size => 18, },
+		#growMode    => gm::GrowHiX,
+		#buffered    => 1,
+		borderWidth => 3,
+		#autoSelect  => 0,
+	);
+
+	my $btn = $top->insert( Button =>
+		pack => { side => 'left',  padx => 0, pady => 0},
+#		origin   => [0, 0],
 		text     => 'Run', 
 		pressed  => 0,
 		onClick  => sub { $self->run_pressed(@_) },
 	);
+	# TODO how can we set the height of the $top based on the height of the button in it?
+	# which was 36 on OSX
+	# $top->height($btn->height + 5);
 	
+	
+	$self->output( $main->insert( Edit =>
+		pack => { side => 'bottom', fill => 'both', expand => 1, },
+		readOnly => 1,
+		text => $welcome,
+	));
+	
+
 	Prima->run;
 }
 
