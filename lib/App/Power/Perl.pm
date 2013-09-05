@@ -34,7 +34,7 @@ END_WELCOME
 sub run {
 	my ($self) = @_;
 
-	my $w = Prima::MainWindow->new(
+	my $main = Prima::MainWindow->new(
 		menuItems => [
 			[ '~File' => [
 					[ '~Open', 'Ctrl-O', '@O', sub { $self->open_file(@_) } ],
@@ -60,18 +60,18 @@ sub run {
 		#origin => [0, 100],  # left, bottom, at least on OSX it defaults to the left top corner
 	);
 
-	$self->output( $w->insert( Edit =>
+	$self->output( $main->insert( Edit =>
 		pack => { fill => 'both', expand => 1, },
 		readOnly => 1,
 		text => $welcome,
 	));
 	
-#	$w->insert( Label =>
+#	$main->insert( Label =>
 #		text   => 'URL',
 #		origin => [0, 300],
 #	);
 #	
-#	my $input = $w->insert( InputLine =>
+#	my $input = $main->insert( InputLine =>
 #		text        => '',
 #		origin      => [50, 300],
 #		#centered    => 1,
@@ -85,7 +85,7 @@ sub run {
 #		#autoSelect  => 0,
 #	);
 	
-	my $btn = $w->insert( Button =>
+	my $btn = $main->insert( Button =>
 		origin   => [0, 0],
 		text     => 'Run', 
 		pressed  => 0,
