@@ -21,7 +21,10 @@ our $VERSION = 0.01;
 my $FORMAT = 1;
 
 has file   => (is => 'rw', isa => 'Str');
+
 has output => (is => 'rw', isa => 'Prima::Edit');
+has root   => (is => 'rw', isa => 'Prima::InputLine');
+
 has code   => (is => 'rw', isa => 'HashRef', default => sub { { format => $FORMAT } } );
 
 my $welcome = <<"END_WELCOME";
@@ -73,7 +76,7 @@ sub run {
 		#origin => [0, 0],
 	);
 
-	my $input = $top->insert( InputLine =>
+	$self->root( $top->insert( InputLine =>
 		text        => '',
 		pack => { side => 'left',  padx => 0, pady => 0},
 		#origin      => [0, 0],
@@ -86,7 +89,7 @@ sub run {
 		#buffered    => 1,
 		borderWidth => 3,
 		#autoSelect  => 0,
-	);
+	));
 
 	my $btn = $top->insert( Button =>
 		pack => { side => 'left',  padx => 0, pady => 0},
@@ -135,7 +138,7 @@ sub select_file {
 	#);
 	if ($open->execute) {
 		#say "File selected " . $open->fileName;
-		$self->code->{file} = $open->fileName;
+		$self->root->text( $open->fileName );
 	}
 }
 
@@ -150,8 +153,9 @@ sub run_pressed {
 	my ($self, $button) = @_;
 
 	my $code = $self->code;
-	if ($code->{file}) {
-		if (open my $fh, '<', $code->{file}) {
+	my $file = $self->root->text;
+	if ($file) {
+		if (open my $fh, '<', $file) {
 			my $regex = $code->{regex} // '';
 			my $output = $self->output;
 			$output->text('');
@@ -163,7 +167,7 @@ sub run_pressed {
 			}
 			close $fh;
 		} else {
-			$self->_error("Could not open file '%s'. Error: '%s'", $code->{file}, $!);
+			$self->_error("Could not open file '%s'. Error: '%s'", $file, $!);
 		}
 	} else {
 		$self->_error("No file selected");
@@ -225,8 +229,11 @@ sub _load_file {
 	# TODO we should probably check if all the parts of the
 	# format are correct (e.g. the regext is eval-able etc.)
 	# We might also want to make some security checks here!
-	if ($code->{format} eq $FORMAT) {
+	if (defined $code->{format} and $code->{format} eq $FORMAT) {
 		$self->code($code);
+		$self->root->text($code->{file});
+	} else {
+		$self->_error('Invalid format');
 	}
 }
 
@@ -265,7 +272,9 @@ sub save_file {
 
 	if ($file) {
 		my $json  = JSON::Tiny->new;
-		my $bytes = $json->encode( $self->code );
+		my $code = $self->code;
+		$code->{file} = $self->root->text;
+		my $bytes = $json->encode( $code );
 		if (open my $fh, '>:encoding(UTF-8)', $file) {
 			print $fh $bytes;
 			close $fh;
