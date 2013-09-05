@@ -1,9 +1,13 @@
 
-- Automatically load the latest.
-- Show recent files.
+- Automatically load the latest JSON file.
+- Show recent JSON files.
 
 - Run "JSON" on the command line.
 - Generate stand-alone Perl script.
+
+- Allow creating configurable script.
+  (E.g. one that gets a filename or a directory name on the command line)
+- Even create GUI for such scripts?
 
 - Select directory
      limit search depth CHECKBOX + NUMBER

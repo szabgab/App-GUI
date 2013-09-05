@@ -37,11 +37,11 @@ sub run {
 	my $w = Prima::MainWindow->new(
 		menuItems => [
 			[ '~File' => [
-					[ '~Open', 'Ctrl-O', sub { $self->open_file(@_) } ],
-					[ '~Save', 'Ctrl-S', sub { $self->save_file(@_) } ],
-					[ 'Save As',         sub { $self->save_file_as(@_) } ],
+					[ '~Open', 'Ctrl-O', '@O', sub { $self->open_file(@_) } ],
+					[ '~Save', 'Ctrl-S', '@S', sub { $self->save_file(@_) } ],
+					[ 'Save As',               sub { $self->save_file_as(@_) } ],
 					[],
-					[ '~Exit', 'Alt-X', '@X', sub { exit } ],
+					[ '~Exit', 'Alt-X',  '@X', sub { exit } ],
 				],
 			],
 			[ '~Editor' => [
