@@ -171,24 +171,25 @@ sub show_about {
 sub run_pressed {
 	my ($self, $button) = @_;
 
-	my $file = $self->root->text;
-	if ($file) {
-		if (open my $fh, '<', $file) {
-			my $regex = $self->regex->text // '';
-			my $output = $self->output;
-			$output->text('');
-			# TODO: Async read?
-			while (my $line = <$fh>) {
-				if ($line =~ /$regex/) {
-					$output->insert_text($line . "\n"); # TODO why do we have to add extra newlines?
-				}
-			}
-			close $fh;
-		} else {
-			$self->_error("Could not open file '%s'. Error: '%s'", $file, $!);
-		}
-	} else {
+	my $root = $self->root->text;
+	if (not $root) {
 		$self->_error("No file selected");
+		return;
+	}
+
+	if (open my $fh, '<', $root) {
+		my $regex = $self->regex->text // '';
+		my $output = $self->output;
+		$output->text('');
+		# TODO: Async read?
+		while (my $line = <$fh>) {
+			if ($line =~ /$regex/) {
+				$output->insert_text($line . "\n"); # TODO why do we have to add extra newlines?
+			}
+		}
+		close $fh;
+	} else {
+		$self->_error("Could not open file '%s'. Error: '%s'", $root, $!);
 	}
 }
 
