@@ -1,4 +1,14 @@
 
+- Show the regex on the main page and eliminate the 'code' data structure.
+
+Maybe have two tabs? One for the file selecttion with a Run button
+that will only list filename. But later we'll want the file selection
+to includ looking into files as well. So we rather want to be able
+to control the output: unique filenames only,
+or lines that matched (incl/excl filename),
+or the matches only (incl/excl filename)...
+
+
 - Automatically load the latest JSON file.
 - Show recent JSON files.
 
@@ -23,4 +33,35 @@
 - Save processes as json files.
 - Allow the execution of the json files on the command line.
 - Convert json files to real perl script.
+
+==============================================================
+Use Cases:
+- Select a directory
+  - find files that match certain conditions
+    file-name wilde-cards
+    timestamp (older than, newer than)
+    size (smaller than, larger than)
+    last modified ...
+    etc.
+    has certain content in it (matching a regex?)
+
+    For each such file do some action as below:
+
+- Select a file
+  - find lines matching a regex (and the negative)
+    m/Foo/
+  - replace strings by other strings
+    s/Foo/Bar/
+  - find strings matching a regex (\d+)
+  - in a spreadsheet select column x
+  - do some operation on the values (e.g. add them together)
+
+- Convert Unix/Linux line endings.
+- Convert encodings of a file.
+
+- In a file containing subtitles
+  - check if the timestamps are aligned correctly
+    (no overlaps, no gaps)
+  - update all the timestamps with a delay of +/- N seconds.
+
 

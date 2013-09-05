@@ -24,8 +24,7 @@ has file   => (is => 'rw', isa => 'Str');
 
 has output => (is => 'rw', isa => 'Prima::Edit');
 has root   => (is => 'rw', isa => 'Prima::InputLine');
-
-has code   => (is => 'rw', isa => 'HashRef', default => sub { { format => $FORMAT } } );
+has regex  => (is => 'rw', isa => 'Prima::InputLine');
 
 my $welcome = <<"END_WELCOME";
 Welcome to the Power Perl v$VERSION
@@ -49,7 +48,7 @@ sub run {
 			],
 			[ '~Editor' => [
 					[ 'Select File',  sub { $self->select_file(@_) } ],
-					[ 'Filter lines', sub { $self->enter_filter(@_) } ],
+					#[ 'Filter lines', sub { $self->enter_filter(@_) } ],
 				],
 			],
 			[],
@@ -77,6 +76,26 @@ sub run {
 	);
 
 	$self->root( $top->insert( InputLine =>
+		text        => '',
+		pack => { side => 'left',  padx => 0, pady => 0},
+		#origin      => [0, 0],
+		#centered    => 1,
+		width       => 300,
+	#	firstChar   => 10,
+		#alignment   => ta::Center,
+		#font        => { size => 18, },
+		#growMode    => gm::GrowHiX,
+		#buffered    => 1,
+		borderWidth => 3,
+		#autoSelect  => 0,
+	));
+
+	$top->insert( Label =>
+		text   => 'Regex:',
+		pack => { side => 'left', padx => 0, pady => 0},
+	);
+
+	$self->regex( $top->insert( InputLine =>
 		text        => '',
 		pack => { side => 'left',  padx => 0, pady => 0},
 		#origin      => [0, 0],
@@ -152,11 +171,10 @@ sub show_about {
 sub run_pressed {
 	my ($self, $button) = @_;
 
-	my $code = $self->code;
 	my $file = $self->root->text;
 	if ($file) {
 		if (open my $fh, '<', $file) {
-			my $regex = $code->{regex} // '';
+			my $regex = $self->regex->text // '';
 			my $output = $self->output;
 			$output->text('');
 			# TODO: Async read?
@@ -174,27 +192,27 @@ sub run_pressed {
 	}
 }
 
-sub enter_filter {
-	my ($self, $main, $c) = @_;
-
-	my $regex = $self->code->{regex} // '';
-	while (1) {
-		$regex = Prima::MsgBox::input_box( 'Enter Perl regex', 'Filter:', $regex);
-		if (defined $regex) {
-			eval "qr/$regex/";
-			if ($@) {
-				$self->_error("Invalid regex $@");
-			} else {
-				last;
-			}
-		} else {
-			last;
-		}
-	}
-	if (defined $regex) {
-		$self->code->{regex} = $regex;
-	}
-}
+#sub enter_filter {
+#	my ($self, $main, $c) = @_;
+#
+#	my $regex = $self->code->{regex} // '';
+#	while (1) {
+#		$regex = Prima::MsgBox::input_box( 'Enter Perl regex', 'Filter:', $regex);
+#		if (defined $regex) {
+#			eval "qr/$regex/";
+#			if ($@) {
+#				$self->_error("Invalid regex $@");
+#			} else {
+#				last;
+#			}
+#		} else {
+#			last;
+#		}
+#	}
+#	if (defined $regex) {
+#		$self->code->{regex} = $regex;
+#	}
+#}
 
 sub _error {
 	my ($self, $format, @args) = @_;
@@ -230,7 +248,7 @@ sub _load_file {
 	# format are correct (e.g. the regext is eval-able etc.)
 	# We might also want to make some security checks here!
 	if (defined $code->{format} and $code->{format} eq $FORMAT) {
-		$self->code($code);
+		$self->regex->text($code->{regex});
 		$self->root->text($code->{file});
 	} else {
 		$self->_error('Invalid format');
@@ -272,8 +290,9 @@ sub save_file {
 
 	if ($file) {
 		my $json  = JSON::Tiny->new;
-		my $code = $self->code;
+		my $code = { format => $FORMAT };
 		$code->{file} = $self->root->text;
+		$code->{regex} = $self->regex->text;
 		my $bytes = $json->encode( $code );
 		if (open my $fh, '>:encoding(UTF-8)', $file) {
 			print $fh $bytes;
