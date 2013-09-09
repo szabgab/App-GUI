@@ -28,6 +28,39 @@ sub load_file {
 	$self->set_data($code);
 }
 
+sub execute {
+	my ($self) = @_;
+
+	my $data = $self->data;
+
+	if (not $data->{file}) {
+		$self->_error("No file selected");
+		return;
+	}
+
+	if (not -e $data->{file}) {
+		$self->_error("Selected file '$data->{file}' does not exist.");
+		return;
+	}
+
+	$self->clean_screen;
+
+	if (-d $data->{file}) {
+		my $rule = Path::Iterator::Rule->new;
+		if (@{ $data->{glob_include} }) {
+			$rule->name(@{ $data->{glob_include} });
+		}
+		my $it = $rule->iter($data->{file});
+		#my $it = path($data->{file})->iterator;
+		while (my $file = $it->()) {
+			$self->process_file($file);
+		}
+	} else {
+			$self->process_file($data->{file});
+	}
+}
+
+
 
 1;
 

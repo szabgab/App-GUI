@@ -197,40 +197,17 @@ sub show_about {
 		"Power Perl v$VERSION\nHacked together by Gabor Szabo in 2013.", mb::Ok);
 }
 
-sub run_pressed {
-	my ($self, $button) = @_;
-
-	my $data = $self->data;
-
-	if (not $data->{file}) {
-		$self->_error("No file selected");
-		return;
-	}
-
-	if (not -e $data->{file}) {
-		$self->_error("Selected file '$data->{file}' does not exist.");
-		return;
-	}
-
-	my $output = $self->output;
-	$output->text('');
-
-	if (-d $data->{file}) {
-		my $rule = Path::Iterator::Rule->new;
-		if (@{ $data->{glob_include} }) {
-			$rule->name(@{ $data->{glob_include} });
-		}
-		my $it = $rule->iter($data->{file});
-		#my $it = path($data->{file})->iterator;
-		while (my $file = $it->()) {
-			$self->_process_file($file);
-		}
-	} else {
-			$self->_process_file($data->{file});
-	}
+sub clean_screen {
+	my ($self) = @_;
+	$self->output->text('');
 }
 
-sub _process_file {
+sub run_pressed {
+	my ($self, $button) = @_;
+	$self->execute;
+}
+
+sub process_file {
 	my ($self, $file) = @_;
 
 	my $output = $self->output;
