@@ -200,7 +200,7 @@ sub show_about {
 sub run_pressed {
 	my ($self, $button) = @_;
 
-	my $data = $self->_get_data;
+	my $data = $self->data;
 
 	if (not $data->{file}) {
 		$self->_error("No file selected");
@@ -234,7 +234,7 @@ sub _process_file {
 	my ($self, $file) = @_;
 
 	my $output = $self->output;
-	my $data = $self->_get_data;
+	my $data = $self->data;
 	my $regex = $data->{regex} // '';
 
 	$output->cursor_cend;
@@ -335,7 +335,7 @@ sub save_file {
 
 	if ($file) {
 		my $json  = JSON::Tiny->new;
-		my $data = $self->_get_data;
+		my $data = $self->data;
 		my $bytes = $json->encode( $data );
 		if (open my $fh, '>:encoding(UTF-8)', $file) {
 			print $fh $bytes;
@@ -345,10 +345,10 @@ sub save_file {
 }
 
 
-# collect all the configurale parameters from the GUI
+# collect all the configurable parameters from the GUI
 #    to save in a file
 #    or to use for a 'run'
-sub _get_data {
+sub data {
 	my ($self) = @_;
 
 	my %data = ( format => $self->FORMAT );
