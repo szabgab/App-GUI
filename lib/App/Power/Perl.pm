@@ -318,8 +318,7 @@ sub _load_file {
 		return;
 	}
 
-	$self->regex->text($code->{regex});
-	$self->root->text($code->{file});
+	$self->_set_data($code);
 }
 
 sub _get_file {
@@ -386,6 +385,15 @@ sub _get_data {
 	}
 
 	return \%data;
+}
+
+sub _set_data {
+	my ($self, $data) = @_;
+
+	$self->regex->text($data->{regex});
+	$self->root->text($data->{file});
+	$self->result_selector->text($data->{result_selector});
+	$self->glob_include->text( join "\n", @{ $data->{glob_include} // [] } );
 }
 
 1;
