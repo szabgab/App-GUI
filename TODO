@@ -18,7 +18,6 @@ Use Cases:
     file-name wilde-cards
     timestamp (older than, newer than)
     size (smaller than, larger than)
-    last modified ...
     etc.
     has certain content in it (matching a regex?)
 
