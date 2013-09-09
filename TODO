@@ -8,12 +8,8 @@ to control the output: unique filenames only,
 or lines that matched (incl/excl filename),
 or the matches only (incl/excl filename)...
 
-
 - Automatically load the latest JSON file.
 - Show recent JSON files.
-
-- Run "JSON" on the command line.
-- Generate stand-alone Perl script.
 
 - Allow creating configurable script.
   (E.g. one that gets a filename or a directory name on the command line)
@@ -30,9 +26,8 @@ or the matches only (incl/excl filename)...
 - Support well known binary formats (e.g. Spreadsheets)
 - Select URL
 
-- Save processes as json files.
 - Allow the execution of the json files on the command line.
-- Convert json files to real perl script.
+- Convert json files to perl script.
 
 ==============================================================
 Use Cases:

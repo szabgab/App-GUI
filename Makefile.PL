@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
 	NAME   => 'App-Power-Perl',
-	AUTHOR => q{Gabor Szabo <szabgab@cpan.com>},
+	AUTHOR => q{Gabor Szabo <szabgab@cpan.org>},
 
 	VERSION_FROM        => 'lib/App/Power/Perl.pm',
 	LICENSE => 'perl',

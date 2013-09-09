@@ -132,7 +132,7 @@ sub run {
 	));
 	
 	if ($self->file) {
-		$self->_load_file($self->file);
+		$self->_load_file;
 	}
 
 	Prima->run;
@@ -240,13 +240,15 @@ sub open_file {
 	);
 
 	if ($open->execute) {
-		$self->_load_file($open->fileName);
 		$self->file($open->fileName);
+		$self->_load_file;
 	}
 }
 
 sub _load_file {
-	my ($self, $file) = @_;
+	my ($self) = @_;
+
+	my $file = $self->file;
 
 	my $json  = JSON::Tiny->new;
 
@@ -254,12 +256,13 @@ sub _load_file {
 	# TODO we should probably check if all the parts of the
 	# format are correct (e.g. the regext is eval-able etc.)
 	# We might also want to make some security checks here!
-	if (defined $code->{format} and $code->{format} eq $FORMAT) {
-		$self->regex->text($code->{regex});
-		$self->root->text($code->{file});
-	} else {
+	if (not defined $code->{format} or $code->{format} ne $FORMAT) {
 		$self->_error('Invalid format');
+		return;
 	}
+
+	$self->regex->text($code->{regex});
+	$self->root->text($code->{file});
 }
 
 sub _get_file {

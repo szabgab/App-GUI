@@ -6,5 +6,6 @@ v0.01
     - Select specific file
     - Process any text file with regular expressions (filtering)
     - Save "script" in JSON format and load from that format.
+    - optional --file path/to/file.json  to load the content on start 
 
 
