@@ -51,6 +51,11 @@ sub execute {
 		if (@{ $data->{glob_include} }) {
 			$rule->name(@{ $data->{glob_include} });
 		}
+
+		# TODO check the validity of the size_limit format
+		if ($data->{set_size_limit} and $data->{size_limit}) {
+			$rule->size($data->{size_limit});
+		}
 		my $it = $rule->iter($data->{file});
 		#my $it = path($data->{file})->iterator;
 		while (my $file = $it->()) {
