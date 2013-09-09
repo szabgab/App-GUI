@@ -1,16 +1,17 @@
 package App::Power::CLI;
 use Moo;
 use MooX::late;
-use MooX::Options;
 
 use JSON::Tiny;
 use Path::Tiny qw(path);
+
+extends 'App::Power::App';
 
 our $VERSION = 0.01;
 
 my $FORMAT = 1;
 
-option file   => (is => 'rw', isa => 'Str', format => 's', required => 1);
+# TODO option file   should be required => 1 for CLI
 
 sub run {
 	my ($self) = @_;

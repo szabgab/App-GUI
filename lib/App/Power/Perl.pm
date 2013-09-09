@@ -4,7 +4,8 @@ use 5.010;
 use Data::Dumper qw(Dumper);
 use Moo;
 use MooX::late;
-use MooX::Options;
+
+extends 'App::Power::App';
 
 use JSON::Tiny;
 use Path::Tiny qw(path);
@@ -25,8 +26,6 @@ use Prima qw(
 our $VERSION = 0.01;
 
 my $FORMAT = 1;
-
-option file   => (is => 'rw', isa => 'Str', format => 's');
 
 has output => (is => 'rw', isa => 'Prima::Edit');
 has root   => (is => 'rw', isa => 'Prima::InputLine');
