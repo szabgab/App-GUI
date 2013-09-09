@@ -53,7 +53,7 @@ sub execute {
 		}
 
 		# TODO check the validity of the size_limit format
-		if ($data->{set_size_limit} and $data->{size_limit}) {
+		if ($data->{enable_size_limit} and $data->{size_limit}) {
 			$rule->size($data->{size_limit});
 		}
 		my $it = $rule->iter($data->{file});

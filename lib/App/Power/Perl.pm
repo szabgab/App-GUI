@@ -29,7 +29,7 @@ has root   => (is => 'rw', isa => 'Prima::InputLine');
 has regex  => (is => 'rw', isa => 'Prima::InputLine');
 has result_selector => (is => 'rw', isa => 'Prima::ComboBox' );
 has glob_include => (is => 'rw', isa => 'Prima::Edit' );
-has set_size_limit => (is => 'rw', isa => 'Prima::CheckBox' );
+has enable_size_limit => (is => 'rw', isa => 'Prima::CheckBox' );
 has size_limit     => (is => 'rw', isa => 'Prima::InputLine');
 
 my $welcome = <<"END_WELCOME";
@@ -149,7 +149,7 @@ sub run {
 		readOnly => 0,
 	));
 
-	$self->set_size_limit( $top2->insert( CheckBox =>
+	$self->enable_size_limit( $top2->insert( CheckBox =>
 		pack       => { side => 'left' },
 		text       => 'Size limit',
 		#backColor  => cl::White,
@@ -344,7 +344,7 @@ sub data {
 		$data{glob_include} = [];
 	}
 
-	$data{set_size_limit} = $self->set_size_limit->checked ? 1 : 0;
+	$data{enable_size_limit} = $self->enable_size_limit->checked ? 1 : 0;
 	$data{size_limit} = $self->size_limit->text;
 
 	return \%data;
@@ -357,9 +357,9 @@ sub set_data {
 	$self->root->text($data->{file});
 	$self->result_selector->text($data->{result_selector});
 	$self->glob_include->text( join "\n", @{ $data->{glob_include} // [] } );
-	$self->set_size_limit->checked( $data->{set_size_limit} );
+	$self->enable_size_limit->checked( $data->{enable_size_limit} );
 	$self->size_limit->text( $data->{size_limit} );
-	$self->size_limit->enabled( $data->{set_size_limit} );
+	$self->size_limit->enabled( $data->{enable_size_limit} );
 }
 
 1;
