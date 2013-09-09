@@ -25,8 +25,6 @@ use Prima qw(
 
 our $VERSION = 0.01;
 
-my $FORMAT = 1;
-
 has output => (is => 'rw', isa => 'Prima::Edit');
 has root   => (is => 'rw', isa => 'Prima::InputLine');
 has regex  => (is => 'rw', isa => 'Prima::InputLine');
@@ -157,7 +155,7 @@ sub run {
 	));
 
 	if ($self->file) {
-		$self->_load_file;
+		$self->load_file;
 	}
 
 	Prima->run;
@@ -298,27 +296,8 @@ sub open_file {
 
 	if ($open->execute) {
 		$self->file($open->fileName);
-		$self->_load_file;
+		$self->load_file;
 	}
-}
-
-sub _load_file {
-	my ($self) = @_;
-
-	my $file = $self->file;
-
-	my $json  = JSON::Tiny->new;
-
-	my $code = $json->decode(path($file)->slurp);
-	# TODO we should probably check if all the parts of the
-	# format are correct (e.g. the regext is eval-able etc.)
-	# We might also want to make some security checks here!
-	if (not defined $code->{format} or $code->{format} ne $FORMAT) {
-		$self->_error('Invalid format');
-		return;
-	}
-
-	$self->_set_data($code);
 }
 
 sub _get_file {
@@ -372,7 +351,7 @@ sub save_file {
 sub _get_data {
 	my ($self) = @_;
 
-	my %data = ( format => $FORMAT );
+	my %data = ( format => $self->FORMAT );
 	$data{file} = $self->root->text;
 	$data{regex} = $self->regex->text;
 	$data{result_selector} = $self->result_selector->text;
@@ -387,7 +366,7 @@ sub _get_data {
 	return \%data;
 }
 
-sub _set_data {
+sub set_data {
 	my ($self, $data) = @_;
 
 	$self->regex->text($data->{regex});

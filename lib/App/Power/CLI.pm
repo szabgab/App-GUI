@@ -7,28 +7,21 @@ use Path::Tiny qw(path);
 
 extends 'App::Power::App';
 
+has data => (is => 'rw', isa => 'HashRef', default => sub { {} } );
+
 our $VERSION = 0.01;
 
-my $FORMAT = 1;
 
 # TODO option file   should be required => 1 for CLI
 
 sub run {
 	my ($self) = @_;
 
-	# _load_file
-	my $file = $self->file;
-	my $json  = JSON::Tiny->new;
-	my $code = $json->decode(path($file)->slurp);
-	if (not defined $code->{format} or $code->{format} ne $FORMAT) {
-		$self->_error('Invalid format');
-		return;
-	}
+	$self->load_file;
 
-	my $regex = $code->{regex};
-	my $root  = $code->{file};
+	my $regex = $self->data->{regex};
+	my $root  = $self->data->{file};
 
-	# run_pressed
 	if (open my $fh, '<', $root) {
 		while (my $line = <$fh>) {
 			if ($line =~ /$regex/) {
@@ -37,6 +30,11 @@ sub run {
 		}
 		close $fh;
 	}
+}
+
+sub set_data {
+	my ($self, $data) = @_;
+	$self->data($data);
 }
 
 sub _error {
