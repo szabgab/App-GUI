@@ -1,6 +1,4 @@
 
-- Show the regex on the main page and eliminate the 'code' data structure.
-
 Maybe have two tabs? One for the file selecttion with a Run button
 that will only list filename. But later we'll want the file selection
 to includ looking into files as well. So we rather want to be able
@@ -8,20 +6,10 @@ to control the output: unique filenames only,
 or lines that matched (incl/excl filename),
 or the matches only (incl/excl filename)...
 
-- Allow creating configurable script.
-  (E.g. one that gets a filename or a directory name on the command line)
-- Even create GUI for such scripts?
-
-- Select directory
-     filter based on generic wilde-card
-
 - Process any text file with regular expressions (replacing?)
 - Support well known text formats (e.g. JSON/YAML/INI/Apache log/XML/HTML)
 - Support well known binary formats (e.g. Spreadsheets)
 - Select URL
-
-- Allow the execution of the json files on the command line.
-- Convert json files to perl script.
 
 ==============================================================
 Use Cases:
