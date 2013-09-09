@@ -221,11 +221,13 @@ sub _process_file {
 	my $data = $self->_get_data;
 	my $regex = $data->{regex} // '';
 
+	$output->cursor_cend;
 	$output->insert_text($file . "\n\n");
 	if (open my $fh, '<', $file) {
 		# TODO: Async read using Prima::File!
 		while (my $line = <$fh>) {
 			if ($line =~ /$regex/) {
+				$output->cursor_cend;
 				$output->insert_text($line . "\n"); # TODO why do we have to add extra newlines?
 			}
 		}
