@@ -119,7 +119,7 @@ sub run {
 	));
 
 	$self->result_selector( $top->insert( 'ComboBox',
-		text   => '',
+		text   => 'Files',
 		items  => ['Files', 'Lines'],
 		pack   => { side => 'left', padx => 0, pady => 0 },
 		#style    => cs::DropDown,
@@ -246,6 +246,7 @@ sub _process_file {
 		# TODO: Async read using Prima::File!
 		while (my $line = <$fh>) {
 			if ($line =~ /$regex/) {
+				next if $data->{result_selector} ne 'Lines';
 				$output->cursor_cend;
 				$output->insert_text($line . "\n"); # TODO why do we have to add extra newlines?
 			}
