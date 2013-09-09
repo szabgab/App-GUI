@@ -8,19 +8,13 @@ to control the output: unique filenames only,
 or lines that matched (incl/excl filename),
 or the matches only (incl/excl filename)...
 
-- Automatically load the latest JSON file.
-- Show recent JSON files.
-
 - Allow creating configurable script.
   (E.g. one that gets a filename or a directory name on the command line)
 - Even create GUI for such scripts?
 
 - Select directory
-     limit search depth CHECKBOX + NUMBER
-     filter files based on extension (case sensitivity?)
      filter based on generic wilde-card
-     filter based on date, size
- 
+
 - Process any text file with regular expressions (replacing?)
 - Support well known text formats (e.g. JSON/YAML/INI/Apache log/XML/HTML)
 - Support well known binary formats (e.g. Spreadsheets)
