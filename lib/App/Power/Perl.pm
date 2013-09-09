@@ -188,16 +188,15 @@ sub show_about {
 sub run_pressed {
 	my ($self, $button) = @_;
 
-	my $root = $self->root->text;
-	if (not $root) {
+	my $data = $self->_get_data;
+
+	if (not $data->{file}) {
 		$self->_error("No file selected");
 		return;
 	}
 
-	say $self->result_selector->text;
-
-	if (open my $fh, '<', $root) {
-		my $regex = $self->regex->text // '';
+	if (open my $fh, '<', $data->{file}) {
+		my $regex = $data->{regex} // '';
 		my $output = $self->output;
 		$output->text('');
 		# TODO: Async read?
@@ -208,7 +207,7 @@ sub run_pressed {
 		}
 		close $fh;
 	} else {
-		$self->_error("Could not open file '%s'. Error: '%s'", $root, $!);
+		$self->_error("Could not open file '%s'. Error: '%s'", $data->{file}, $!);
 	}
 }
 
@@ -313,15 +312,27 @@ sub save_file {
 
 	if ($file) {
 		my $json  = JSON::Tiny->new;
-		my $code = { format => $FORMAT };
-		$code->{file} = $self->root->text;
-		$code->{regex} = $self->regex->text;
-		my $bytes = $json->encode( $code );
+		my $data = $self->_get_data;
+		my $bytes = $json->encode( $data );
 		if (open my $fh, '>:encoding(UTF-8)', $file) {
 			print $fh $bytes;
 			close $fh;
 		}
 	}
+}
+
+
+# collect all the configurale parameters from the GUI
+#    to save in a file
+#    or to use for a 'run'
+sub _get_data {
+	my ($self) = @_;
+
+	my %data = ( format => $FORMAT );
+	$data{file} = $self->root->text;
+	$data{regex} = $self->regex->text;
+	$data{result_selector} = $self->result_selector->text;
+	return \%data;
 }
 
 1;
