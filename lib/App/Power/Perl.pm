@@ -12,6 +12,7 @@ use Prima::noARGV;
 use Prima qw(
 	Application
 	Buttons
+	ComboBox
 	Edit
 	FileDialog
 	InputLine
@@ -28,6 +29,7 @@ option file   => (is => 'rw', isa => 'Str', format => 's');
 has output => (is => 'rw', isa => 'Prima::Edit');
 has root   => (is => 'rw', isa => 'Prima::InputLine');
 has regex  => (is => 'rw', isa => 'Prima::InputLine');
+has result_selector => (is => 'rw', isa => 'Prima::ComboBox' );
 
 my $welcome = <<"END_WELCOME";
 Welcome to the Power Perl v$VERSION
@@ -95,12 +97,12 @@ sub run {
 
 	$top->insert( Label =>
 		text   => 'Regex:',
-		pack => { side => 'left', padx => 0, pady => 0},
+		pack => { side => 'left', padx => 0, pady => 0 },
 	);
 
 	$self->regex( $top->insert( InputLine =>
 		text        => '',
-		pack => { side => 'left',  padx => 0, pady => 0},
+		pack => { side => 'left',  padx => 0, pady => 0 },
 		#origin      => [0, 0],
 		#centered    => 1,
 		width       => 300,
@@ -112,6 +114,15 @@ sub run {
 		borderWidth => 3,
 		#autoSelect  => 0,
 	));
+
+	$self->result_selector( $top->insert( 'ComboBox',
+		text   => '',
+		items  => ['Files', 'Lines'],
+		pack   => { side => 'left', padx => 0, pady => 0 },
+		#style    => cs::DropDown,
+	));
+	$self->result_selector->style(cs::DropDown);
+
 
 	my $btn = $top->insert( Button =>
 		pack => { side => 'left',  padx => 0, pady => 0},
@@ -182,6 +193,8 @@ sub run_pressed {
 		$self->_error("No file selected");
 		return;
 	}
+
+	say $self->result_selector->text;
 
 	if (open my $fh, '<', $root) {
 		my $regex = $self->regex->text // '';
