@@ -195,11 +195,35 @@ sub run_pressed {
 		return;
 	}
 
-	if (open my $fh, '<', $data->{file}) {
-		my $regex = $data->{regex} // '';
-		my $output = $self->output;
-		$output->text('');
-		# TODO: Async read?
+	if (not -e $data->{file}) {
+		$self->_error("Selected file '$data->{file}' does not exist.");
+		return;
+	}
+
+	my $output = $self->output;
+	$output->text('');
+
+	if (-d $data->{file}) {
+		my $it = path($data->{file})->iterator;
+		while (my $file = $it->()) {
+			$self->_process_file($file);
+
+		}
+	} else {
+			$self->_process_file($data->{file});
+	}
+}
+
+sub _process_file {
+	my ($self, $file) = @_;
+
+	my $output = $self->output;
+	my $data = $self->_get_data;
+	my $regex = $data->{regex} // '';
+
+	$output->insert_text($file . "\n\n");
+	if (open my $fh, '<', $file) {
+		# TODO: Async read using Prima::File!
 		while (my $line = <$fh>) {
 			if ($line =~ /$regex/) {
 				$output->insert_text($line . "\n"); # TODO why do we have to add extra newlines?
