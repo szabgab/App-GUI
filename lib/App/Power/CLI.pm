@@ -23,7 +23,7 @@ sub run {
 		$self->_error('Invalid format');
 		return;
 	}
-	
+
 	my $regex = $code->{regex};
 	my $root  = $code->{file};
 
@@ -44,4 +44,4 @@ sub _error {
 }
 
 1;
- 
+

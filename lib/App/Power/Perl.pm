@@ -57,7 +57,7 @@ sub run {
 			[],
 			[ '~Help' => [
 					[ '~About', \&show_about ],
-				],	
+				],
 			],
 		],
 		text   => 'Power Perl',
@@ -116,21 +116,21 @@ sub run {
 	my $btn = $top->insert( Button =>
 		pack => { side => 'left',  padx => 0, pady => 0},
 #		origin   => [0, 0],
-		text     => 'Run', 
+		text     => 'Run',
 		pressed  => 0,
 		onClick  => sub { $self->run_pressed(@_) },
 	);
 	# TODO how can we set the height of the $top based on the height of the button in it?
 	# which was 36 on OSX
 	# $top->height($btn->height + 5);
-	
-	
+
+
 	$self->output( $main->insert( Edit =>
 		pack => { side => 'bottom', fill => 'both', expand => 1, },
 		readOnly => 1,
 		text => $welcome,
 	));
-	
+
 	if ($self->file) {
 		$self->_load_file;
 	}
