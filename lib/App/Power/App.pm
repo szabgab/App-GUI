@@ -4,6 +4,7 @@ use MooX::late;
 use MooX::Options;
 
 use Path::Tiny qw(path);
+use Path::Iterator::Rule;
 
 has FORMAT => (is => 'ro', default => 1);
 

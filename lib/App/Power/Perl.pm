@@ -9,7 +9,6 @@ extends 'App::Power::App';
 
 use JSON::Tiny;
 use Path::Tiny qw(path);
-use Path::Iterator::Rule;
 
 use Prima::noARGV; # to allow MooX::Options to handle @ARGV
 use Prima qw(

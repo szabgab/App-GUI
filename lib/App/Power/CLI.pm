@@ -18,6 +18,7 @@ sub run {
 	my ($self) = @_;
 
 	$self->load_file;
+	$self->execute;
 
 	my $regex = $self->data->{regex};
 	my $root  = $self->data->{file};
@@ -32,6 +33,13 @@ sub run {
 	}
 }
 
+sub print_str {
+	my ($self, $str) = @_;
+
+	print $str;
+}
+
+
 sub set_data {
 	my ($self, $data) = @_;
 	$self->data($data);
@@ -41,6 +49,11 @@ sub _error {
 	my ($self, $format, @args) = @_;
 	printf STDERR $format, @args;
 }
+sub clean_screen {
+	my ($self) = @_;
+	print "\n" x 5;
+}
+
 
 1;
 
