@@ -60,6 +60,27 @@ sub execute {
 	}
 }
 
+sub process_file {
+	my ($self, $file) = @_;
+
+	my $data = $self->data;
+	my $regex = $data->{regex} // '';
+
+	$self->print_str("$file\n\n");
+
+	if (open my $fh, '<', $file) {
+		# TODO: Async read using Prima::File!
+		while (my $line = <$fh>) {
+			if ($line =~ /$regex/) {
+				next if $data->{result_selector} ne 'Lines';
+				$self->print_str("$line\n"); # TODO why do we have to add extra newlines?
+			}
+		}
+		close $fh;
+	} else {
+		$self->_error("Could not open file '%s'. Error: '%s'", $data->{file}, $!);
+	}
+}
 
 
 1;

@@ -207,28 +207,12 @@ sub run_pressed {
 	$self->execute;
 }
 
-sub process_file {
-	my ($self, $file) = @_;
+sub print_str {
+	my ($self, $str) = @_;
 
 	my $output = $self->output;
-	my $data = $self->data;
-	my $regex = $data->{regex} // '';
-
 	$output->cursor_cend;
-	$output->insert_text($file . "\n\n");
-	if (open my $fh, '<', $file) {
-		# TODO: Async read using Prima::File!
-		while (my $line = <$fh>) {
-			if ($line =~ /$regex/) {
-				next if $data->{result_selector} ne 'Lines';
-				$output->cursor_cend;
-				$output->insert_text($line . "\n"); # TODO why do we have to add extra newlines?
-			}
-		}
-		close $fh;
-	} else {
-		$self->_error("Could not open file '%s'. Error: '%s'", $data->{file}, $!);
-	}
+	$output->insert_text($str);
 }
 
 #sub enter_filter {
