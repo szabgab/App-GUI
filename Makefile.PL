@@ -16,6 +16,7 @@ WriteMakefile(
 		'MooX::Options' => 0, # 3.83
 
 		'Path::Tiny'    => 0, # 0.030,
+		'Path::Iterator::Rule' => 0, # 1.005
 		'Prima'         => 0, # 1.37,
 	},
 	dist  => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },

@@ -1,12 +1,14 @@
 package App::Power::Perl;
 use 5.010;
 
+use Data::Dumper qw(Dumper);
 use Moo;
 use MooX::late;
 use MooX::Options;
 
 use JSON::Tiny;
 use Path::Tiny qw(path);
+use Path::Iterator::Rule;
 
 use Prima::noARGV;
 use Prima qw(
@@ -30,6 +32,7 @@ has output => (is => 'rw', isa => 'Prima::Edit');
 has root   => (is => 'rw', isa => 'Prima::InputLine');
 has regex  => (is => 'rw', isa => 'Prima::InputLine');
 has result_selector => (is => 'rw', isa => 'Prima::ComboBox' );
+has glob_include => (is => 'rw', isa => 'Prima::Edit' );
 
 my $welcome = <<"END_WELCOME";
 Welcome to the Power Perl v$VERSION
@@ -136,6 +139,18 @@ sub run {
 	# $top->height($btn->height + 5);
 
 
+	my $top2 = $main->insert( Widget =>
+		pack => { side => 'top', fill => 'x', padx => 0, pady => 0},
+		backColor => cl::White,
+		height => 90,
+	);
+
+	$self->glob_include( $top2->insert ( Edit =>
+		pack     => { side => 'left' },
+		text     => '',
+		readOnly => 0,
+	));
+
 	$self->output( $main->insert( Edit =>
 		pack => { side => 'bottom', fill => 'both', expand => 1, },
 		readOnly => 1,
@@ -204,10 +219,14 @@ sub run_pressed {
 	$output->text('');
 
 	if (-d $data->{file}) {
-		my $it = path($data->{file})->iterator;
+		my $rule = Path::Iterator::Rule->new;
+		if (@{ $data->{glob_include} }) {
+			$rule->name(@{ $data->{glob_include} });
+		}
+		my $it = $rule->iter($data->{file});
+		#my $it = path($data->{file})->iterator;
 		while (my $file = $it->()) {
 			$self->_process_file($file);
-
 		}
 	} else {
 			$self->_process_file($data->{file});
@@ -358,6 +377,14 @@ sub _get_data {
 	$data{file} = $self->root->text;
 	$data{regex} = $self->regex->text;
 	$data{result_selector} = $self->result_selector->text;
+
+	my $glob_include    = $self->glob_include->text;
+	if ($glob_include and $glob_include =~ /\S/) {
+		$data{glob_include} = [ grep { length } map { s/^\s+|\s+$//g; $_ } split /\n/, $glob_include ];
+	} else {
+		$data{glob_include} = [];
+	}
+
 	return \%data;
 }
 
